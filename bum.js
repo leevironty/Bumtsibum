@@ -25,7 +25,7 @@ class Song{
     self.game = game;
     self.cards = [];
     self.$song = $($("#song-template").html());
-    self.$song.appendTo(game.$songListing);
+    self.$song.append(game.$songListing);
 
   }
   render(){
@@ -46,18 +46,7 @@ class Song{
   }
 }
 
-class Team{
-  constructor(name, color){
-    this.name = name;
-    this.color = color;
-    this.score = 0;
-    this.wonSongs =[];
-  }
-  correct(song){
-    this.wonSong.push(song);
-  }
 
-}
 
 class Game{
   constructor(gameName){
