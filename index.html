@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="bum.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title></title>
+  </head>
+  <body>
+    <div id="controls">
+      <p class="control-title">Bumtsibum Controls</p>
+      <div id="creators">
+        <div id="team-creator">
+          <p class="team-title">Teams</p>
+          <input id="team-name" placeholder="Team name" type="text">
+          <button id="add-team">Add team</button>
+          <div id="team-listing">
+            <p class="empty-list">No teams added yet</p>
+          </div>
+        </div>
+        <div id="song-creator">
+          <p class="song-title">Songs</p>
+          <input id="song-name" placeholder="Song name" type="text">
+          <input id="song-lyrics" placeholder="Lyrics" type="text">
+          <button id="add-song">Add song</button>
+          <div id="song-listing">
+            <p class="empty-list">No songs added yet</p>
+          </div>
+        </div>
+      </div>
+      <div id="settings">
+        <p class="settings-title">Game settings</p>
+        Here we will soon find all kinds of buttons waiting to be clicked.
+      </div>
+    </div>
+    <div id="game-area">
+      <p>Game area</p>
+      <div id="time">time</div>
+      <div id="scoreboard">scoreboard</div>
+      <div id="song-area"><p>song area</p></div>
+    </div>
+
+    <!-- Song template for all situations -->
+    <template id="song-template">
+      <div class="song">
+        <p class="name"></p>
+        <div class="cards"></div>
+      </div>
+    </template>
+    <!-- Card for game area -->
+    <template id="card-template">
+      <div class="card hidden">
+        <p class="word"></p>
+        <p class="number"></p>
+      </div>
+    </template>
+    <!-- Card for song edit area -->
+    <template id="edit-card-template">
+      <div class="edit-card">
+        <input class="edit-word" type="text" name="" value="">
+        <p class="word"></p>
+      </div>
+    </template>
+  </body>
+</html>

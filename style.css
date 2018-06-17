@@ -1,0 +1,21 @@
+/*TODO:
+Card style
+Song style
+Hidden card
+Hidden song
+*/
+#controls, #controls #creators > div, #game-area {
+  border: 1px solid #999;
+  border-radius: 3px;
+  padding: 1em;
+  margin: 0.5em; }
+
+#controls #creators {
+  display: flex;
+  justyfy: center; }
+#controls #team-creator {
+  flex: 1; }
+#controls #song-creator {
+  flex: 2; }
+
+/*# sourceMappingURL=style.css.map */
