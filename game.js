@@ -3,7 +3,7 @@ class Game{
         this.setup = {};
         this.setup.$teamListing = $("#team-listing");
         this.setup.$songListing = $("#song-listing");
-        this.$currentGame = $("#game-area");
+        this.$gameArea = $("#game-area");
         this.songs =  [];
         this.teams = [];
         this.liveGame = false;
@@ -17,7 +17,7 @@ class Game{
     }
     getNewTeam(){
         this.addTeam(new Team($("#team-name").val(),rndColor()));
-        this.$("#team-name").val(""); // wipe input field clear
+        $("#team-name").val(""); // wipe input field clear
     }
     getNewSong(){
         var sName = $("#song-name").val();
@@ -25,6 +25,18 @@ class Game{
         var sLyrics = $("#song-lyrics").val();
         $("#song-lyrics").val("");
         this.addSong(new Song(sName, sLyrics, this));
+    }
+    startGame(){
+        // TODO: add real settings
+        // TODO: hide songs on game start
+        // TODO: add button to reveal songs
+        // TODO: initialise ui elements for players
+        // TODO: make game controls for game master
+        this.settings = {
+            time: 30,
+            trapsPerLevel: 0,
+        };
+        this.liveGame = true;
     }
 
 }
@@ -45,10 +57,12 @@ class Song{
         this.name = name;
         this.lyrics = lyrics;
         this.parentGame = parentGame;
-        this.editCards = [];
+        this.wordList = this.getParsedLyrics();
+        this.gameCards = [];
         this.active = false;
-        this.addCardsToEditor();
+        this.addCardToEditor();
     }
+    /* // useless.
     addCardsToEditor(){
         // Create div for cards to go
         // make cards and place them in div
@@ -60,12 +74,35 @@ class Song{
         for (var i=0;i<l.length;++i){
             this.editCards.push(new EditCard(l[i], this));
         }
+    }*/
+    addCardToEditor(){
+        this.$editSong = $($("#edit-song-template").html());
+        this.parentGame.setup.$songListing.append(this.$editSong);
+        this.$editSong.children(".edit-song-title").val(this.name);
+        this.$editSong.children(".edit-lyrics").val(this.lyrics);
+        this.updateEditorCounter();
+        // TODO: change to keydown but make it work consistently with single letter words.
+        this.$editSong.children(".edit-lyrics").on("keyup change", this.updateLyrics.bind(this));
+        this.$editSong.children(".edit-song-title").on("keyup change", this.updateTitle.bind(this));
     }
-    getNewLyrics(){
-
+    updateEditorCounter(){
+        console.log("counter update called");
+        this.wordList = this.getParsedLyrics();
+        this.$editSong.find(".n").text(this.wordList.length);
+    }
+    getParsedLyrics(){
+        return this.lyrics.split(" ").filter(word => word !== "");
+    }
+    updateLyrics(){
+        this.lyrics = this.$editSong.children(".edit-lyrics").val();
+        this.updateEditorCounter();
+    }
+    updateTitle(){
+        this.name = this.$editSong.children(".edit-song-title").val();
     }
 }
 
+/* // Useless.
 class EditCard{
     constructor(word,parentSong){
         // create html
@@ -84,12 +121,38 @@ class EditCard{
         this.parentSong.getNewLyrics();
     }
 }
+*/
+class GameCard{
+    constructor(word, n, parentSong){
+        this.word = word;
+        this.n = n;
+        this.$card = $($("#card-template").html());
+        this.parentSong = parentSong;
+        this.parentSong.parentGame.$gameArea.append(this.$card);
+        this.$card.children(".number").text(this.n);
+        this.$card.children(".word").text(this.word);
+        this.$card.click(this.reveal.bind(this));
+    }
+    reveal(){
+        // TODO: add interaction with game
+        this.$card.addClass("revealed");
+    }
+}
 
+function defocus(event){
+    // TODO: put focus on something else
+    if (event.keyCode==27){
+        this.blur();
+    }
+}
 
 function bindButtons(){
     // TODO: make this Game's method
     $("#add-team").click(game.getNewTeam.bind(game));
     $("#add-song").click(game.getNewSong.bind(game));
+    $("#game-start").click(game.startGame.bind(game));
+
+    $("input").on("keydown", defocus);
 }
 
 function rndColor(){
