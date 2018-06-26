@@ -1,13 +1,14 @@
 class Game{
+    // Multiple games per browser are possible to implement quite easily
     constructor(){
         this.setup = {};
         this.setup.$teamListing = $("#team-listing");
         this.setup.$songListing = $("#song-listing");
         this.$gameArea = $("#game-area");
+        this.$songWrapper = $("#song-wrapper");
         this.songs =  [];
         this.teams = [];
         this.liveGame = false;
-        //me = this;
     }
     addTeam(team){
         this.teams.push(team);
@@ -16,7 +17,7 @@ class Game{
         this.songs.push(song);
     }
     getNewTeam(){
-        this.addTeam(new Team($("#team-name").val(),rndColor()));
+        this.addTeam(new Team($("#team-name").val(),rndColor(),this));
         $("#team-name").val(""); // wipe input field clear
     }
     getNewSong(){
@@ -30,13 +31,32 @@ class Game{
         // TODO: add real settings
         // TODO: hide songs on game start
         // TODO: add button to reveal songs
-        // TODO: initialise ui elements for players
+        // TODO: initialise ui elements shown to players
         // TODO: make game controls for game master
         this.settings = {
             time: 30,
             trapsPerLevel: 0,
         };
         this.liveGame = true;
+        if (this.songs.length > 0 && this.teams.length > 0){
+            this.currentSongId = 0;
+            this.currentTeamId = 0;
+            this.placeCurrentSong();
+
+        } else {
+            alert("Game can't be started without a team or song.");
+        }
+
+    }
+
+    songCorrect(){
+
+    }
+    newTry(){
+
+    }
+    placeCurrentSong(){
+        this.songs[this.currentSongId].makeCurrentSong();
     }
 
 }
@@ -49,7 +69,53 @@ class Team{
         this.score = 0;
         this.wonSongs = [];
         this.parentGame = parentGame;
+        this.placeInEditor();
     }
+    placeInEditor(){
+        this.$team = $($("#team-template").html());
+        this.parentGame.setup.$teamListing.append(this.$team);
+        this.$team.children(".team-name").text(this.name);
+        var indicator = this.$team.children(".color-indicator");
+        indicator.text(this.color);
+        indicator.css('background',this.color);
+        if (isColorDark(this.color)){
+            indicator.addClass("dark");
+        } else {
+            indicator.addClass("light");
+        }
+
+
+
+        // TODO: make things editable. Turn fields into inputs with data synced to variables.
+        // TODO: "remove team" -button
+    }
+}
+
+function isColorDark(bg){
+    //double a = 1 - ( 0.299 * color.R + 0.587 * color.G + 0.114 * color.B)/255;
+    // copied from stack overflow. Eyes see green brighter than others.
+
+    if (bg.length == 7) {
+        var r = parseInt(bg.slice(1, 3),16);
+        var g = parseInt(bg.slice(3, 5),16);
+        var b = parseInt(bg.slice(5, 7),16);
+    } else if (bg.length == 4){
+        var r = parseInt(bg[1],16)*15;
+        var g = parseInt(bg[2],16)*15;
+        var b = parseInt(bg[3],16)*15;
+    } else {
+        console.log("Invalid color given to isColorDark.")
+    }
+    return euc(r,g,b)<0.6;
+    /*var A = 1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    if (A<0.5){
+        return true;
+    } else {
+        return false;
+    }*/
+}
+function euc(r,g,b){
+    return (r**2+g**2+b**2)**0.5/441.6729559300637;
 }
 
 class Song{
@@ -84,14 +150,23 @@ class Song{
         // TODO: change to keydown but make it work consistently with single letter words.
         this.$editSong.children(".edit-lyrics").on("keyup change", this.updateLyrics.bind(this));
         this.$editSong.children(".edit-song-title").on("keyup change", this.updateTitle.bind(this));
+        // TODO: add prompt to add dots to long words in places where word break is possible
+    }
+    makeCurrentSong(){
+        this.gameCards =[];
+        for (var i=0;i<this.wordList.length;++i){
+            this.gameCards.push(new GameCard(this.wordList[i], i+1, this));
+        }
     }
     updateEditorCounter(){
-        console.log("counter update called");
+        //console.log("counter update called");
         this.wordList = this.getParsedLyrics();
         this.$editSong.find(".n").text(this.wordList.length);
     }
     getParsedLyrics(){
-        return this.lyrics.split(" ").filter(word => word !== "");
+        // TODO: replace with shy not tested
+        // Shy will break words with a hyphen when needed
+        return this.lyrics.replace(".","&shy;").split(" ").filter(word => word !== "");
     }
     updateLyrics(){
         this.lyrics = this.$editSong.children(".edit-lyrics").val();
@@ -128,7 +203,7 @@ class GameCard{
         this.n = n;
         this.$card = $($("#card-template").html());
         this.parentSong = parentSong;
-        this.parentSong.parentGame.$gameArea.append(this.$card);
+        this.parentSong.parentGame.$songWrapper.append(this.$card);
         this.$card.children(".number").text(this.n);
         this.$card.children(".word").text(this.word);
         this.$card.click(this.reveal.bind(this));
@@ -156,11 +231,12 @@ function bindButtons(){
 }
 
 function rndColor(){
-    return "#"+Math.floor(Math.random()*16777215).toString(16);
+    var n = Math.floor(Math.random()*16777215).toString(16);
+    return "#"+"0".repeat(6-n.length)+n;
 }
 
 
 $(function(){
     game = new Game();
     bindButtons();
-})
+});

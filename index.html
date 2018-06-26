@@ -2,7 +2,8 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
+    <script src="jquery-2.1.1.min.js"></script>
     <script src="game.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <title></title>
@@ -22,7 +23,7 @@
         <div id="song-creator">
           <p class="song-title">Songs</p>
           <input id="song-name" placeholder="Song name" type="text">
-          <input id="song-lyrics" placeholder="Lyrics" type="text">
+          <input id="song-lyrics" size="40" placeholder="Lyrics" type="text">
           <button id="add-song">Add song</button>
           <div id="song-listing">
             <p class="empty-list">No songs added yet</p>
@@ -43,7 +44,7 @@
       </div>
       <div id="time">time</div>
       <div id="scoreboard">scoreboard</div>
-      <div id="song-area"><p>song area</p></div>
+      <div id="song-area"><p>song area</p><div id="song-wrapper"></div></div>
     </div>
 
     <!-- Song template for all situations -->
@@ -64,7 +65,7 @@
     <template id="edit-song-template">
       <div class="edit-card">
         <input type="text" class="edit-song-title" placeholder="Title">
-        <input class="edit-lyrics" type="text" placeholder="lyrics">
+        <input class="edit-lyrics" type="text" size="40" placeholder="lyrics">
         <p class="counter"><span class="n">0</span> words</p>
       </div>
     </template>

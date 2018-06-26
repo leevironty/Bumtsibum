@@ -4,7 +4,7 @@ Song style
 Hidden card
 Hidden song
 */
-#controls, #controls #creators > div, #game-area {
+#controls, #controls #creators > div, #game-area, #game-area #song-wrapper .card {
   border: 1px solid #999;
   border-radius: 3px;
   padding: 1em;
@@ -13,9 +13,45 @@ Hidden song
 #controls #creators {
   display: flex;
   justyfy: center; }
+  #controls #creators .empty-list {
+    display: none; }
+  #controls #creators .empty-list:last-child {
+    display: block; }
+  #controls #creators #song-listing {
+    padding-top: 0.5em;
+    margin-top: 0.5em; }
+  #controls #creators #team-listing {
+    padding-top: 0.5em;
+    margin-top: 0.5em; }
+    #controls #creators #team-listing div.team {
+      display: flex; }
+      #controls #creators #team-listing div.team div.color-indicator {
+        padding: 0.5em;
+        display: inline-block;
+        flex: 1; }
+      #controls #creators #team-listing div.team div.color-indicator.light {
+        color: #000; }
+      #controls #creators #team-listing div.team div.color-indicator.dark {
+        color: #fff; }
+      #controls #creators #team-listing div.team p.team-name {
+        flex: 2;
+        margin: 0.5em; }
 #controls #team-creator {
   flex: 1; }
 #controls #song-creator {
   flex: 2; }
+
+#game-area #song-wrapper {
+  display: flex; }
+  #game-area #song-wrapper .card {
+    flex: 1; }
+    #game-area #song-wrapper .card p.number {
+      display: block; }
+    #game-area #song-wrapper .card p.word {
+      display: none; }
+  #game-area #song-wrapper .card.revealed p.number {
+    display: none; }
+  #game-area #song-wrapper .card.revealed p.word {
+    display: block; }
 
 /*# sourceMappingURL=style.css.map */

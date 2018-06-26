@@ -11,14 +11,51 @@ Hidden song
   margin:0.5em;
 }
 
+
 #controls{
   @extend %borders;
+
 
   #creators{
     display:flex;
     justyfy:center;
     > div{
-    @extend %borders;
+      @extend %borders;
+    }
+
+    // show and hide declaration about empty list
+    .empty-list{
+      display:none;
+    }
+    .empty-list:last-child{
+      display:block;
+    }
+    #song-listing{
+      padding-top:0.5em;
+      margin-top: 0.5em;
+
+    }
+    #team-listing{
+      padding-top:0.5em;
+      margin-top: 0.5em;
+      div.team{
+        display:flex;
+        div.color-indicator{
+          padding:0.5em;
+          display:inline-block;
+          flex:1;
+        }
+        div.color-indicator.light{
+          color:#000;
+        }
+        div.color-indicator.dark{
+          color:#fff;
+        }
+        p.team-name{
+          flex:2;
+          margin:0.5em;
+        }
+      }
     }
   }
   #team-creator{
@@ -29,6 +66,27 @@ Hidden song
   }
 }
 
-#game-area{
+#game-area {
   @extend %borders;
+  #song-wrapper {
+    display: flex;
+    .card {
+      @extend %borders;
+      flex:1;
+      p.number{
+        display:block;
+      }
+      p.word{
+        display:none;
+      }
+    }
+    .card.revealed{
+      p.number{
+        display:none;
+      }
+      p.word{
+        display:block;
+      }
+    }
+  }
 }
