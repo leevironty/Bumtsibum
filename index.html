@@ -38,11 +38,11 @@
     <div id="game-area">
       <p>Game area</p>
       <div id="inGameControls">
-        <button id="nextSong">Correct</button>
+        <button id="song-correct">Correct</button>
         <button id="nextTeam">Wrong</button>
         <button id="newTry">Nice try</button>
       </div>
-      <div id="time">time</div>
+      <div id="timer">time</div>
       <div id="scoreboard">scoreboard</div>
       <div id="song-area"><p>song area</p><div id="song-wrapper"></div></div>
     </div>
@@ -78,6 +78,12 @@
     <div class="team">
       <div class="color-indicator"></div>
       <p class="team-name"></p>
+    </div>
+  </template>
+  <template id="team-score-template">
+    <div class="score">
+      <p class="name"></p>
+      <p class="points"></p>
     </div>
   </template>
   </body>

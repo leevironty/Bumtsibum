@@ -70,9 +70,14 @@ Hidden song
   @extend %borders;
   #song-wrapper {
     display: flex;
+    flex-wrap: wrap;
     .card {
       @extend %borders;
       flex:1;
+      // Make text nicely centered
+      display:flex;
+      justify-content: center;
+      align-items: center;
       p.number{
         display:block;
       }
