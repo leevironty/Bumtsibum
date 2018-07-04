@@ -18,7 +18,7 @@ Hidden song
 
   #creators{
     display:flex;
-    justyfy:center;
+    //justify:center;
     > div{
       @extend %borders;
     }
@@ -94,4 +94,22 @@ Hidden song
       }
     }
   }
+}
+
+#scoreboard{
+  p{
+    display:inline-block;
+    margin:0;
+  }
+  p.name{
+    width:50%;
+    text-align: right;
+  }
+  p.name::after{
+    content:":";
+    margin-right:1em;
+  }
+}
+#hider{
+  display:none;
 }

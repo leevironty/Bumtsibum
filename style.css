@@ -11,8 +11,7 @@ Hidden song
   margin: 0.5em; }
 
 #controls #creators {
-  display: flex;
-  justyfy: center; }
+  display: flex; }
   #controls #creators .empty-list {
     display: none; }
   #controls #creators .empty-list:last-child {
@@ -57,5 +56,18 @@ Hidden song
     display: none; }
   #game-area #song-wrapper .card.revealed p.word {
     display: block; }
+
+#scoreboard p {
+  display: inline-block;
+  margin: 0; }
+#scoreboard p.name {
+  width: 50%;
+  text-align: right; }
+#scoreboard p.name::after {
+  content: ":";
+  margin-right: 1em; }
+
+#hider {
+  display: none; }
 
 /*# sourceMappingURL=style.css.map */

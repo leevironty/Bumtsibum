@@ -3,7 +3,19 @@ class Game{
     constructor(){
         this.initVariables();
         this.bindEditorButtons();
+        this.bindKeys();
         $("input").on("keydown", defocusOnEsc);
+    }
+    handleKeyPresses(event){
+        if (this.noActiveInputs()){
+
+        }
+    }
+    noActiveInputs(){
+
+    }
+    bindKeys(){
+        $("body").on("keydown",this.handleKeyPresses.bind(this))
     }
     initVariables(){
         this.setup = {};
@@ -20,6 +32,7 @@ class Game{
         this.buttons.$correctSong = $("#song-correct");
         this.buttons.$nextTeam = $("#nextTeam");
         this.buttons.$newTry = $("#newTry");
+        this.$timer = $("#timer");
     }
     bindEditorButtons(){
         this.buttons.$addTeam.click(this.getNewTeam.bind(this));
@@ -42,6 +55,7 @@ class Game{
         var $teamName = $("#team-name");
         this.addTeam(new Team($teamName.val(),rndColor(),this));
         $teamName.val(""); // wipe input field clear
+        $teamName.focus();
     }
     getNewSong(){
         var $sName = $("#song-name");
@@ -51,6 +65,7 @@ class Game{
         var sLyrics = $sLyrics.val();
         $sLyrics.val("");
         this.addSong(new Song(sName, sLyrics, this));
+        $sName.focus();
     }
     startGame(){
         // TODO: add real settings
@@ -68,7 +83,7 @@ class Game{
             limitTTOF: false,
             hardTTOF: false,
             collapseSongsOnGameStart: true,
-            gameInNewWindow: false
+            gameInNewWindow: true
         };
         if (this.songs.length > 0 && this.teams.length > 0){
             this.currentSongId = 0;
@@ -78,6 +93,18 @@ class Game{
         } else {
             alert("Game can't be started without a team or song.");
             return
+        }
+        if (this.settings.gameInNewWindow){
+            let win = $(window);
+            let w = Math.floor(win.width()*0.5);
+            let h = Math.floor(win.height()*0.5);
+            this.gameWindow = window.open("","game-window","width="+w+",height="+h);
+            let cssLink = $("link[rel='stylesheet']").clone();
+            let relPath = cssLink.attr("href");
+            cssLink.attr("href",makeAbsolutePath(relPath)); // WORKS ONLY WITH ONE STYLESHEET
+            $("head",this.gameWindow.document).append(cssLink);
+            this.$gameArea.detach(); // detach preserves variable references
+            $("body",this.gameWindow.document).append(this.$gameArea);
         }
         this.placeTeamsInScoreboard();
         this.bindGMButtons();
@@ -94,6 +121,7 @@ class Game{
         this.currentTeam.endTurn();
         this.rotateCurrentTeam();
         this.currentTeam.startTurn();
+        this.stopTimerUpdate();
     }
     rotateCurrentTeam(){
         this.currentTeamId = (this.currentTeamId+1)%this.teams.length;
@@ -106,6 +134,7 @@ class Game{
         } else {
             this.currentSong.placeInPlayArea();
         }
+        this.stopTimerUpdate();
     }
     endGame(){
 
@@ -128,19 +157,15 @@ class Game{
         }
         this.timerTime = new Date(new Date().getTime() + 1000*this.settings.timeToSing);
         this.refreshTimerID = setInterval(this.updateTimer.bind(this),20);
-        this.$timer = $("#timer"); // TODO: move this somewhere else
+
     }
+
     stopTimerUpdate(){
         clearInterval(this.refreshTimerID);
-
         this.refreshTimerID = undefined;
+        this.$timer.text("--:--");
     }
-    timeLeftInMs(){
 
-    }
-    pauseTimer(){
-        this.stopTimerUpdate()
-    }
     updateTimer(){
         var left = this.timerTime - new Date();
         if (left<=0){
@@ -265,10 +290,8 @@ class Song{
         this.$editSong.children(".edit-song-title").val(this.name);
         this.$editSong.children(".edit-lyrics").val(this.lyrics);
         this.updateEditorCounter();
-        // TODO: change to keydown but make it work consistently with single letter words.
-        this.$editSong.children(".edit-lyrics").on("keyup change", this.updateLyrics.bind(this));
+        this.$editSong.children(".edit-lyrics").on("keydown change", this.updateLyrics.bind(this)); // this needs to be instant, hence keydown
         this.$editSong.children(".edit-song-title").on("keyup change", this.updateTitle.bind(this));
-        // TODO: add prompt to add dots to long words in places where word break is possible
     }
     placeInPlayArea(){
         this.gameCards =[];
@@ -282,7 +305,6 @@ class Song{
         // TODO: move html editing part of card making to a method
     }
     updateEditorCounter(){
-        //console.log("counter update called");
         this.wordList = this.getParsedLyrics();
         this.$editSong.find(".n").text(this.wordList.length);
     }
@@ -292,8 +314,12 @@ class Song{
         return this.lyrics.replace(".","&shy;").split(" ").filter(word => word !== "");
     }
     updateLyrics(){
-        this.lyrics = this.$editSong.children(".edit-lyrics").val();
-        this.updateEditorCounter();
+        // set timeout 0 is required
+        setTimeout(function(){
+            this.lyrics = this.$editSong.children(".edit-lyrics").val();
+            this.updateEditorCounter();
+        }.bind(this),0);
+
     }
     updateTitle(){
         this.name = this.$editSong.children(".edit-song-title").val();
@@ -332,7 +358,6 @@ class GameCard{
         this.$card.click(this.reveal.bind(this));
     }
     reveal(){
-        // TODO: add interaction with game
         this.$card.addClass("revealed");
         this.parentSong.parentGame.cardRevealed();
     }
@@ -350,6 +375,18 @@ function rndColor(){
     return "#"+"0".repeat(6-n.length)+n;
 }
 
+function makeAbsolutePath(relative){
+    var pn = window.location.pathname;
+    var folder = pn.slice(0,pn.lastIndexOf("/")+1);
+    var href = window.location.href;
+    var queries;
+    if (href.indexOf("?")!==-1){
+        queries = href.slice(href.indexOf("?"));
+    } else {
+        queries = "";
+    }
+    return window.location.origin + folder + relative + queries;
+}
 
 $(function(){
     game = new Game();
