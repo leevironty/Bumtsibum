@@ -6,47 +6,80 @@
     <script src="jquery-3.3.1.min.js"></script>
     <script src="game.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
-    <title></title>
+    <!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">-->
+    <!--<link href="/material-icons/mat-icons.scss" rel="stylesheet">-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <title>Bumtsibum editor</title>
   </head>
   <body>
-    <div id="controls">
-      <p class="control-title">Bumtsibum Controls</p>
-      <div id="creators">
-        <div id="team-creator">
-          <p class="team-title">Teams</p>
-          <input id="team-name" placeholder="Team name" type="text">
-          <button id="add-team">Add team</button>
-          <div id="team-listing">
-            <p class="empty-list">No teams added yet</p>
-          </div>
-        </div>
-        <div id="song-creator">
-          <p class="song-title">Songs</p>
-          <input id="song-name" placeholder="Song name" type="text">
-          <input id="song-lyrics" size="40" placeholder="Lyrics" type="text">
-          <button id="add-song">Add song</button>
-          <div id="song-listing">
-            <p class="empty-list">No songs added yet</p>
-          </div>
-        </div>
-      </div>
-      <div id="settings">
-        <p class="settings-title">Game settings</p>
+    <div id="content">
+      <header>
+        <h1 class="page-title">Bumtsibum</h1>
+        <div id="help"></div>
+        <div class="keys"></div>
+        <!--TODO: make help and keys-reference-->
+      </header>
+      <div id="controls">
+        <div id="settings">
+          <p class="settings-title">Game settings</p>
 
-      </div>
-      <div id="inGameControls">
-        <button id="game-start">Start game</button>
-        <button id="song-correct">Correct</button>
-        <button id="nextTeam">Wrong / next team</button>
-        <button id="newTry">Nice try / reset timer</button>
+        </div>
+        <div id="inGameControls">
+          <button id="game-start">Start game</button>
+          <button id="song-correct">Correct</button>
+          <button id="nextTeam">Wrong / next team</button>
+          <button id="newTry">Nice try / reset timer</button>
+        </div>
+        <div id="creators">
+          <div id="team-creator">
+            <p class="team-title">Teams</p>
+            <input id="team-name" placeholder="Team name" type="text">
+            <button id="add-team" class="icon-button"><i class="material-icons">add_circle_outline</i></button>
+            <div id="team-listing">
+              <p class="empty-list">No teams added yet</p>
+            </div>
+          </div>
+          <div id="song-creator">
+            <p class="song-title">Songs</p>
+            <div class="song-inputs">
+              <input id="song-name" placeholder="Song name" type="text">
+              <input id="song-lyrics" size="40" placeholder="Lyrics" type="text">
+              <button id="add-song" class="icon-button"><i class="material-icons">add_circle_outline</i></button>
+            </div>
+            <div id="song-listing">
+              <p class="empty-list">No songs added yet</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+    <footer>
+        <a href="https://github.com/leevironty/Bumtsibum">
+          <img class="logo" src="https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub mark">
+          <img class="logo-text"src="https://assets-cdn.github.com/images/modules/logos_page/GitHub-Logo.png" alt="GitHub logo">
+        </a>
+        <a href="/feedback">Feedback</a>
+        <a href="/about">About</a>
+        <a href="https://olarinmaensamoojat.fi">OMS</a>
+      </footer>
+
+
     <div id="hider">
       <div id="game-area">
-        <p>Game area</p>
-        <div id="timer">time</div>
-        <div id="scoreboard">scoreboard</div>
-        <div id="song-area"><p>song area</p><div id="song-wrapper"></div></div>
+        <h1 id="game-name"></h1>
+        <div id="song-area">
+          <div class="over-cards-bar">
+            <p id="timer">--:--</p>
+            <p class="current-team"></p>
+            <p class="last-action-result"></p>
+          </div>
+          <div id="song-wrapper"></div>
+          <div class="under-cards-bar">
+            <div class="game-progress"></div>
+            <div class="previous-song"></div>
+          </div>
+          <div id="scoreboard"></div>
+        </div>
       </div>
     </div>
 
@@ -69,6 +102,7 @@
       <div class="edit-card">
         <input type="text" class="edit-song-title" placeholder="Title">
         <input class="edit-lyrics" type="text" size="40" placeholder="lyrics">
+        <button class="remove-song-button icon-button"><i class="material-icons">remove_circle_outline</i></button>
         <p class="counter"><span class="n">0</span> words</p>
       </div>
     </template>
@@ -79,8 +113,9 @@
     </template>
   <template id="team-template">
     <div class="team">
-      <div class="color-indicator"></div>
-      <p class="team-name"></p>
+      <!--<div class="color-indicator"></div>-->
+      <input type="text" class="team-name">
+      <button class="icon-button remove-team-button"><i class="material-icons">remove_circle_outline</i></button>
     </div>
   </template>
   <template id="team-score-template">

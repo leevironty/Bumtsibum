@@ -1,9 +1,12 @@
-/*TODO:
-Card style
-Song style
-Hidden card
-Hidden song
-*/
+@import "material-icons/mat-icons";
+@import "scss/actual-game";
+@import "scss/game-editor";
+@import "scss/header";
+@import "scss/footer";
+
+
+// TODO: fix this mess with game-editor and element widths.
+// things are broken visually
 %borders{
   border: 1px solid #999;
   border-radius: 3px;
@@ -11,105 +14,53 @@ Hidden song
   margin:0.5em;
 }
 
-
-#controls{
-  @extend %borders;
-
-
-  #creators{
-    display:flex;
-    //justify:center;
-    > div{
-      @extend %borders;
-    }
-
-    // show and hide declaration about empty list
-    .empty-list{
-      display:none;
-    }
-    .empty-list:last-child{
-      display:block;
-    }
-    #song-listing{
-      padding-top:0.5em;
-      margin-top: 0.5em;
-
-    }
-    #team-listing{
-      padding-top:0.5em;
-      margin-top: 0.5em;
-      div.team{
-        display:flex;
-        div.color-indicator{
-          padding:0.5em;
-          display:inline-block;
-          flex:1;
-        }
-        div.color-indicator.light{
-          color:#000;
-        }
-        div.color-indicator.dark{
-          color:#fff;
-        }
-        p.team-name{
-          flex:2;
-          margin:0.5em;
-        }
-      }
-    }
-  }
-  #team-creator{
-    flex:1;
-  }
-  #song-creator{
-    flex:2;
-  }
+%center-content-vertical{
+  display:flex;
+  align-items: center;
 }
 
-#game-area {
-  @extend %borders;
-  #song-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    .card {
-      @extend %borders;
-      flex:1;
-      // Make text nicely centered
-      display:flex;
-      justify-content: center;
-      align-items: center;
-      p.number{
-        display:block;
-      }
-      p.word{
-        display:none;
-      }
-    }
-    .card.revealed{
-      p.number{
-        display:none;
-      }
-      p.word{
-        display:block;
-      }
-    }
-  }
+body{
+  margin:0;
+  display:flex;
+  flex-flow:column;
+  align-items:center;
 }
 
-#scoreboard{
-  p{
-    display:inline-block;
-    margin:0;
-  }
-  p.name{
-    width:50%;
-    text-align: right;
-  }
-  p.name::after{
-    content:":";
-    margin-right:1em;
-  }
+#content{
+  overflow:auto;
+  padding:0;
+  min-width:60vw;
+  min-height: 80vh;
 }
+footer{
+  height:20vh;
+  width:100vw;
+}
+
 #hider{
   display:none;
+}
+
+p.counter{
+  display: inline-block;
+  margin: 0;
+  color: #aaa;
+  font-size: 0.8em;
+  font-family:monospace;
+}
+
+button{
+  background: white;
+  border: 2px solid #555;
+  border-radius: 2px;
+}
+
+.icon-button{
+  border:none;
+  vertical-align: -50%;
+  padding:0;
+}
+
+body{
+  font-family:roboto, sans-serif;
 }

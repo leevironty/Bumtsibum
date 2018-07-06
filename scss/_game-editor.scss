@@ -1,0 +1,64 @@
+#controls{
+  #creators{
+    display:flex;
+    // show and hide declaration about empty list
+    .empty-list{
+      display:none;
+    }
+    .empty-list:last-child{
+      display:block;
+    }
+    #song-listing{
+      padding-top:0.5em;
+      margin-top: 0.5em;
+
+    }
+    #team-listing{
+      padding-top:0.5em;
+      margin-top: 0.5em;
+      div.team{
+        div.color-indicator{
+          padding:0.5em;
+          display:inline-block;
+          flex:1;
+        }
+        div.color-indicator.light{
+          color:#000;
+        }
+        div.color-indicator.dark{
+          color:#fff;
+        }
+        p.team-name{
+          flex:2;
+          margin:0.5em;
+        }
+      }
+    }
+    input {
+      border: none;
+      border-bottom: 2px solid #777;
+      color: #777;
+      margin-right:0.6em;
+    }
+
+    input:focus {
+      border-color: #333;
+      color: #333;
+      outline: none;
+    }
+    .song-inputs{
+      dislplaY:flex;
+    }
+  }
+  #team-creator{
+    flex:1;
+    margin-right: 2em;
+  }
+  #song-creator{
+    flex:2;
+    margin-left:2em;
+    .song-inputs{
+      display:flex;
+    }
+  }
+}

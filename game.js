@@ -51,6 +51,12 @@ class Game{
     addSong(song){
         this.songs.push(song);
     }
+    removeSong(song){
+        this.songs.splice(this.songs.indexOf(song),1);
+    }
+    removeTeam(team){
+        this.teams.splice(this.teams.indexOf(team),1);
+    }
     getNewTeam(){
         var $teamName = $("#team-name");
         this.addTeam(new Team($teamName.val(),rndColor(),this));
@@ -72,7 +78,7 @@ class Game{
         // TODO: hide songs on game start
         // TODO: add button to reveal songs
         // TODO: initialise ui elements shown to players
-        // TODO: make game controls for game master
+        // TODO: make hotkeys for GM
         this.settings = {
             timeToSing: 30,
             limitTTS: true,
@@ -96,19 +102,26 @@ class Game{
         }
         if (this.settings.gameInNewWindow){
             let win = $(window);
-            let w = Math.floor(win.width()*0.5);
-            let h = Math.floor(win.height()*0.5);
+            let w = Math.floor(win.width()*0.8);
+            let h = Math.floor(win.height()*0.8);
             this.gameWindow = window.open("","game-window","width="+w+",height="+h);
-            let cssLink = $("link[rel='stylesheet']").clone();
+            win.on("unload",function(){this.gameWindow.close()}.bind(this));
+            let cssLink = $("link[type='text/css']").clone();
             let relPath = cssLink.attr("href");
             cssLink.attr("href",makeAbsolutePath(relPath)); // WORKS ONLY WITH ONE STYLESHEET
-            $("head",this.gameWindow.document).append(cssLink);
+            let head = $("head",this.gameWindow.document);
+            head.append(cssLink);
+            head.append("<title>The actual game</title>");
             this.$gameArea.detach(); // detach preserves variable references
             $("body",this.gameWindow.document).append(this.$gameArea);
         }
-        this.placeTeamsInScoreboard();
+        this.buttons.$startGame.off("click")
+            .on("click",this.endGame.bind(this))
+            .text("End game");
+        //this.placeTeamsInScoreboard(); // teams can to go to scoreboard on creation
         this.bindGMButtons();
         this.currentTeam.startTurn();
+
     }
 
     get currentTeam(){
@@ -151,19 +164,35 @@ class Game{
     newTry(){
 
     }
-    resetTimer(){
+
+    resetTimer(ms){
+        // ms optional. If not specified, seconds in settings will be used
         if (this.refreshTimerID !== undefined){
             this.stopTimerUpdate();
         }
-        this.timerTime = new Date(new Date().getTime() + 1000*this.settings.timeToSing);
+        if (ms===undefined){
+            ms = 1000*this.settings.timeToSing;
+        }
+        this.timerTime = new Date(new Date().getTime() + ms);
         this.refreshTimerID = setInterval(this.updateTimer.bind(this),20);
+        // TODO: make timer update more reasonalbe
 
     }
 
-    stopTimerUpdate(){
+    stopTimerUpdate(makeDashes){
         clearInterval(this.refreshTimerID);
         this.refreshTimerID = undefined;
-        this.$timer.text("--:--");
+        if (makeDashes !== undefined || makeDashes){
+            this.$timer.text("--:--");
+        }
+    }
+    toggleTimerFreeze(){
+        if (this.timerFrosenMs===undefined){
+            this.stopTimerUpdate(false);
+            this.timerFrosenMs = this.timerTime - new Date();
+        } else {
+            this.resetTimer(this.timerFrosenMs);
+        }
     }
 
     updateTimer(){
@@ -171,7 +200,7 @@ class Game{
         if (left<=0){
             this.stopTimerUpdate();
             this.$timer.addClass("times-up");
-            this.$timer.text("0.0s left");
+            this.$timer.text("0.0s");
 
             // TODO: make nice css for timer when time's up
         } else {
@@ -185,15 +214,18 @@ class Game{
                 } else {
                     this.$timer.attr("low", "even");
                 }
-                this.$timer.text(secs+"."+parts+"s left");
+                this.$timer.text(secs+"."+parts+"s");
             } else {
                 // if (String(secs).length == 1){secs = "0"+secs}
-                this.$timer.text(mins+":"+secs+" left");
+                this.$timer.text(mins+":"+secs+"");
             }
         }
     }
     cardRevealed(){
         this.resetTimer();
+    }
+    gotTrapped(){
+        this.nextTeam();
     }
 
 }
@@ -205,6 +237,7 @@ class Team{
         this.color = color;
         this.wonSongs = [];
         this.parentGame = parentGame;
+        this.placeInScoreboard();
         this.placeInEditor();
     }
     get points(){
@@ -217,26 +250,36 @@ class Team{
     placeInEditor(){
         this.$team = $($("#team-template").html());
         this.parentGame.setup.$teamListing.append(this.$team);
-        this.$team.children(".team-name").text(this.name);
-        var indicator = this.$team.children(".color-indicator");
+        this.$team.children(".team-name").val(this.name);
+        // Taking team colours out for now. Maybe not a necessary feature
+     /* var indicator = this.$team.children(".color-indicator");
         indicator.text(this.color);
         indicator.css('background',this.color);
-        if (isColorDark(this.color)){
+        /* if (isColorDark(this.color)){
             indicator.addClass("dark");
         } else {
             indicator.addClass("light");
         }
+        */
+        this.$team.children("input.team-name").on("keyup change",this.updateTeamName.bind(this));
+        this.$team.children(".remove-team-button").on("click",this.removeSelf.bind(this));
 
-
-
-        // TODO: make things editable. Turn fields into inputs with data synced to variables.
-        // TODO: "remove team" -button
+    }
+    removeSelf(){
+        this.$team.remove();
+        this.parentGame.removeTeam(this);
+    }
+    updateTeamName(event){
+        setTimeout(function(){
+            this.name = this.$team.children("input.team-name").val();
+            this.$score.children(".name").text(this.name);
+        }.bind(this));
     }
     placeInScoreboard(){
         this.$score = $($("#team-score-template").html());
         this.$score.children(".name").text(this.name);
         this.$score.children(".points").text(this.points);
-        this.parentGame.$gameArea.children("#scoreboard").append(this.$score);
+        this.parentGame.$gameArea.find("#scoreboard").append(this.$score);
     }
     updateScore(){
         this.$score.children(".points").text(this.points);
@@ -290,8 +333,14 @@ class Song{
         this.$editSong.children(".edit-song-title").val(this.name);
         this.$editSong.children(".edit-lyrics").val(this.lyrics);
         this.updateEditorCounter();
-        this.$editSong.children(".edit-lyrics").on("keydown change", this.updateLyrics.bind(this)); // this needs to be instant, hence keydown
+        // this needs to be instant, hence keydown. Keyup isn't instant but doesn't require setTimeout
+        this.$editSong.children(".edit-lyrics").on("keydown change", this.updateLyrics.bind(this));
         this.$editSong.children(".edit-song-title").on("keyup change", this.updateTitle.bind(this));
+        this.$editSong.children(".remove-song-button").on("click",this.removeSelf.bind(this));
+    }
+    removeSelf(){
+        this.$editSong.remove()
+        this.parentGame.removeSong(this);
     }
     placeInPlayArea(){
         this.gameCards =[];
@@ -356,10 +405,18 @@ class GameCard{
         this.$card.children(".number").text(this.n);
         this.$card.children(".word").text(this.word);
         this.$card.click(this.reveal.bind(this));
+        this.isTrap = false;
     }
     reveal(){
         this.$card.addClass("revealed");
         this.parentSong.parentGame.cardRevealed();
+        if (this.isTrap){
+            this.parentSong.parentGame.gotTrapped();
+            this.$card.addClass("trap");
+        }
+    }
+    makeTrap(){
+        this.isTrap = true;
     }
 }
 
@@ -370,7 +427,7 @@ function defocusOnEsc(event){
     }
 }
 
-function rndColor(){
+function rndColor(){ // this actually won't generate white but that's ok
     var n = Math.floor(Math.random()*0xffffff).toString(16);
     return "#"+"0".repeat(6-n.length)+n;
 }
@@ -386,6 +443,14 @@ function makeAbsolutePath(relative){
         queries = "";
     }
     return window.location.origin + folder + relative + queries;
+}
+
+// from stack overflow
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
 }
 
 $(function(){

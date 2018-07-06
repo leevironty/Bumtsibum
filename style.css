@@ -1,14 +1,53 @@
-/*TODO:
-Card style
-Song style
-Hidden card
-Hidden song
-*/
-#controls, #controls #creators > div, #game-area, #game-area #song-wrapper .card {
-  border: 1px solid #999;
-  border-radius: 3px;
-  padding: 1em;
-  margin: 0.5em; }
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: local("Material Icons"), local("MaterialIcons-Regular"), url(https://fonts.gstatic.com/s/materialicons/v38/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format("woff2"); }
+/*TODO: currently no edge support?*/
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased; }
+
+#game-area {
+  width: 100vw;
+  height: 100vh; }
+  #game-area #song-wrapper {
+    display: flex;
+    flex-wrap: wrap; }
+    #game-area #song-wrapper .card {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center; }
+      #game-area #song-wrapper .card p.number {
+        display: block; }
+      #game-area #song-wrapper .card p.word {
+        display: none; }
+    #game-area #song-wrapper .card.revealed p.number {
+      display: none; }
+    #game-area #song-wrapper .card.revealed p.word {
+      display: block; }
+
+#scoreboard p {
+  display: inline-block;
+  margin: 0; }
+#scoreboard p.name {
+  width: 50%;
+  text-align: right; }
+#scoreboard p.name::after {
+  content: ":";
+  margin-right: 1em; }
 
 #controls #creators {
   display: flex; }
@@ -22,52 +61,96 @@ Hidden song
   #controls #creators #team-listing {
     padding-top: 0.5em;
     margin-top: 0.5em; }
-    #controls #creators #team-listing div.team {
-      display: flex; }
-      #controls #creators #team-listing div.team div.color-indicator {
-        padding: 0.5em;
-        display: inline-block;
-        flex: 1; }
-      #controls #creators #team-listing div.team div.color-indicator.light {
-        color: #000; }
-      #controls #creators #team-listing div.team div.color-indicator.dark {
-        color: #fff; }
-      #controls #creators #team-listing div.team p.team-name {
-        flex: 2;
-        margin: 0.5em; }
+    #controls #creators #team-listing div.team div.color-indicator {
+      padding: 0.5em;
+      display: inline-block;
+      flex: 1; }
+    #controls #creators #team-listing div.team div.color-indicator.light {
+      color: #000; }
+    #controls #creators #team-listing div.team div.color-indicator.dark {
+      color: #fff; }
+    #controls #creators #team-listing div.team p.team-name {
+      flex: 2;
+      margin: 0.5em; }
+  #controls #creators input {
+    border: none;
+    border-bottom: 2px solid #777;
+    color: #777;
+    margin-right: 0.6em; }
+  #controls #creators input:focus {
+    border-color: #333;
+    color: #333;
+    outline: none; }
+  #controls #creators .song-inputs {
+    dislplaY: flex; }
 #controls #team-creator {
-  flex: 1; }
+  flex: 1;
+  margin-right: 2em; }
 #controls #song-creator {
-  flex: 2; }
+  flex: 2;
+  margin-left: 2em; }
+  #controls #song-creator .song-inputs {
+    display: flex; }
 
-#game-area #song-wrapper {
+footer {
+  justify-content: space-around; }
+  footer a {
+    color: black;
+    text-decoration: none; }
+    footer a img {
+      max-height: 100%; }
+    footer a img.logo {
+      height: 2em; }
+    footer a img.logo-text {
+      height: 1em; }
+
+#game-area #song-wrapper .card {
+  border: 1px solid #999;
+  border-radius: 3px;
+  padding: 1em;
+  margin: 0.5em; }
+
+footer, footer a {
   display: flex;
-  flex-wrap: wrap; }
-  #game-area #song-wrapper .card {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center; }
-    #game-area #song-wrapper .card p.number {
-      display: block; }
-    #game-area #song-wrapper .card p.word {
-      display: none; }
-  #game-area #song-wrapper .card.revealed p.number {
-    display: none; }
-  #game-area #song-wrapper .card.revealed p.word {
-    display: block; }
+  align-items: center; }
 
-#scoreboard p {
-  display: inline-block;
-  margin: 0; }
-#scoreboard p.name {
-  width: 50%;
-  text-align: right; }
-#scoreboard p.name::after {
-  content: ":";
-  margin-right: 1em; }
+body {
+  margin: 0;
+  display: flex;
+  flex-flow: column;
+  align-items: center; }
+
+#content {
+  overflow: auto;
+  padding: 0;
+  min-width: 60vw;
+  min-height: 80vh; }
+
+footer {
+  height: 20vh;
+  width: 100vw; }
 
 #hider {
   display: none; }
+
+p.counter {
+  display: inline-block;
+  margin: 0;
+  color: #aaa;
+  font-size: 0.8em;
+  font-family: monospace; }
+
+button {
+  background: white;
+  border: 2px solid #555;
+  border-radius: 2px; }
+
+.icon-button {
+  border: none;
+  vertical-align: -50%;
+  padding: 0; }
+
+body {
+  font-family: roboto, sans-serif; }
 
 /*# sourceMappingURL=style.css.map */
