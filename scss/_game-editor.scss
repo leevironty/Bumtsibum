@@ -11,7 +11,13 @@
     #song-listing{
       padding-top:0.5em;
       margin-top: 0.5em;
-
+      .edit-card{
+        display:flex;
+        align-items: baseline;
+        .counterwraper .counter{
+          float:right;
+        }
+      }
     }
     #team-listing{
       padding-top:0.5em;
@@ -61,4 +67,28 @@
       display:flex;
     }
   }
+  button{
+    outline:none;
+    &:focus i.material-icons{
+      text-shadow:0 0 10px #0003;
+    }
+  }
+  #inGameControls button{
+    padding:0.3em 0.7em;
+    &:focus{
+      outline:auto;
+    }
+    &:hover{
+      background: #555;
+      color:#fff;
+    }
+    &:active{
+      background: #333;
+    }
+    // Underline key for shortcut
+    &::first-letter{
+      text-decoration: underline;
+    }
+  }
+
 }

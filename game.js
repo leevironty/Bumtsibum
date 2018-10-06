@@ -4,18 +4,37 @@ class Game{
         this.initVariables();
         this.bindEditorButtons();
         this.bindKeys();
+        this.initTooltips();
         $("input").on("keydown", defocusOnEsc);
     }
     handleKeyPresses(event){
         if (this.noActiveInputs()){
-
+            // Check if keys 0-9 is pressed and if game is running
+            if (this.cardkeys.includes(event.key) && this.currentTeamId !== undefined){
+                let i = (parseInt(event.key)+9)%10;
+                this.currentSong.revealNthCard(i);
+            } else { // Handle other hotkeys
+                //for (var i in this.shortcuts){
+                for (var i = 0; i < this.shortcuts.length; i++){
+                    if (event.key === this.shortcuts[i].key){
+                        this.shortcuts[i].button.click();
+                    }
+                }
+            }
+        } else if (event.key==="Enter"){
+            // focus and click next element after input on enter
+            $("input[type=text][tabindex='1']:focus").next().focus().click();
         }
+
     }
     noActiveInputs(){
-
+        return $("input[type=text]:focus").length === 0;
     }
     bindKeys(){
-        $("body").on("keydown",this.handleKeyPresses.bind(this))
+        $("body").on("keydown",this.handleKeyPresses.bind(this));
+    }
+    bindKeysForSecondWindow(){
+        $("body", this.gameWindow.document).on("keydown",this.handleKeyPresses.bind(this));
     }
     initVariables(){
         this.setup = {};
@@ -33,17 +52,30 @@ class Game{
         this.buttons.$nextTeam = $("#nextTeam");
         this.buttons.$newTry = $("#newTry");
         this.$timer = $("#timer");
+        this.shortcuts = [
+            {key:"s", button:this.buttons.$startGame},
+            {key:"c", button:this.buttons.$correctSong},
+            {key:"w", button:this.buttons.$nextTeam},
+            {key:"n", button:this.buttons.$newTry}
+        ];
+        this.cardkeys = ["1","2","3","4","5","6","7","8","9","0"];
+    }
+    initTooltips(){
+        for (var i in this.shortcuts){
+            this.shortcuts[i].button.attr("title", "Hotkey: " + this.shortcuts[i].key);
+        }
     }
     bindEditorButtons(){
         this.buttons.$addTeam.click(this.getNewTeam.bind(this));
         this.buttons.$addSong.click(this.getNewSong.bind(this));
         this.buttons.$startGame.click(this.startGame.bind(this));
     }
-
+    /* THIS WILL BE CALLED ONLY AFTER GAME STARTS! */
     bindGMButtons(){
         this.buttons.$correctSong.click(this.songCorrect.bind(this));
         this.buttons.$nextTeam.click(this.nextTeam.bind(this));
         this.buttons.$newTry.click(this.newTry.bind(this));
+
     }
     addTeam(team){
         this.teams.push(team);
@@ -77,8 +109,6 @@ class Game{
         // TODO: add real settings
         // TODO: hide songs on game start
         // TODO: add button to reveal songs
-        // TODO: initialise ui elements shown to players
-        // TODO: make hotkeys for GM
         this.settings = {
             timeToSing: 30,
             limitTTS: true,
@@ -89,7 +119,8 @@ class Game{
             limitTTOF: false,
             hardTTOF: false,
             collapseSongsOnGameStart: true,
-            gameInNewWindow: true
+            gameInNewWindow: true,
+            showWordCounter: false
         };
         if (this.songs.length > 0 && this.teams.length > 0){
             this.currentSongId = 0;
@@ -114,11 +145,14 @@ class Game{
             head.append("<title>The actual game</title>");
             this.$gameArea.detach(); // detach preserves variable references
             $("body",this.gameWindow.document).append(this.$gameArea);
+            this.bindKeysForSecondWindow();
         }
         this.buttons.$startGame.off("click")
             .on("click",this.endGame.bind(this))
             .text("End game");
-        //this.placeTeamsInScoreboard(); // teams can to go to scoreboard on creation
+        // swap hotkey on game start to match new text on button
+        this.shortcuts.find(c=>c.button===this.buttons.$startGame).key = "e";
+        this.initTooltips(); // Update tooltip for new hotkey
         this.bindGMButtons();
         this.currentTeam.startTurn();
 
@@ -150,7 +184,10 @@ class Game{
         this.stopTimerUpdate();
     }
     endGame(){
-
+        // TODO: impement endGame()
+        // clear window
+        // highlight scoreboard
+        // prompt for new game
     }
     placeTeamsInScoreboard() {
         this.teams.forEach(team => team.placeInScoreboard());
@@ -330,16 +367,24 @@ class Song{
     addCardToEditor(){
         this.$editSong = $($("#edit-song-template").html());
         this.parentGame.setup.$songListing.append(this.$editSong);
-        this.$editSong.children(".edit-song-title").val(this.name);
-        this.$editSong.children(".edit-lyrics").val(this.lyrics);
+        //this.updateCounterVisibility();
+        this.$editSong.find(".edit-song-title").val(this.name);
+        this.$editSong.find(".edit-lyrics").val(this.lyrics);
         this.updateEditorCounter();
         // this needs to be instant, hence keydown. Keyup isn't instant but doesn't require setTimeout
-        this.$editSong.children(".edit-lyrics").on("keydown change", this.updateLyrics.bind(this));
-        this.$editSong.children(".edit-song-title").on("keyup change", this.updateTitle.bind(this));
-        this.$editSong.children(".remove-song-button").on("click",this.removeSelf.bind(this));
+        this.$editSong.find(".edit-lyrics").on("keydown change", this.updateLyrics.bind(this));
+        this.$editSong.find(".edit-song-title").on("keyup change", this.updateTitle.bind(this));
+        this.$editSong.find(".remove-song-button").on("click",this.removeSelf.bind(this));
+    }
+    updateCounterVisibility(){
+        if (!this.parentGame.settings.showWordCounter){
+            this.$editSong.addClass("hide-counter");
+        } else {
+            this.$editSong.removeClass("hide-counter");
+        }
     }
     removeSelf(){
-        this.$editSong.remove()
+        this.$editSong.remove();
         this.parentGame.removeSong(this);
     }
     placeInPlayArea(){
@@ -351,14 +396,12 @@ class Song{
     vanish(){
         this.gameCards.forEach(card=>card.$card.remove());
         this.gameCards = [];
-        // TODO: move html editing part of card making to a method
     }
     updateEditorCounter(){
         this.wordList = this.getParsedLyrics();
         this.$editSong.find(".n").text(this.wordList.length);
     }
     getParsedLyrics(){
-        // TODO: replace with shy not tested
         // Shy will break words with a hyphen when needed
         return this.lyrics.replace(".","&shy;").split(" ").filter(word => word !== "");
     }
@@ -373,28 +416,11 @@ class Song{
     updateTitle(){
         this.name = this.$editSong.children(".edit-song-title").val();
     }
+    revealNthCard(n){
+        this.gameCards[n].reveal();
+    }
 }
 
-/* // Useless.
-class EditCard{
-    constructor(word,parentSong){
-        // create html
-        // place it in right place
-        // bind all keypresses to trigger parent song lyricsd updater
-        this.word = word;
-        this.$card = $($("#edit-card-template").html());
-        this.parentSong = parentSong;
-        this.parentSong.$editCardArea.append(this.$card);
-        this.$card.children(".edit-word").val(this.word);
-        this.$card.children(".edit-word").on("keydown",this.updateLyrics.bind(this));
-    }
-    updateLyrics(){
-        // Keep variable always equivalent to input field
-        this.word = this.$card.children(".edit-word").val();
-        this.parentSong.getNewLyrics();
-    }
-}
-*/
 class GameCard{
     constructor(word, n, parentSong){
         this.word = word;
@@ -421,7 +447,6 @@ class GameCard{
 }
 
 function defocusOnEsc(event){
-    // TODO: put focus on something else
     if (event.keyCode===27){
         this.blur();
     }

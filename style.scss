@@ -4,7 +4,7 @@
 @import "scss/header";
 @import "scss/footer";
 
-
+$nightMode: false;
 // TODO: fix this mess with game-editor and element widths.
 // things are broken visually
 %borders{
@@ -63,4 +63,11 @@ button{
 
 body{
   font-family:roboto, sans-serif;
+  background: white;
+  @if $nightMode{
+    background: black;
+    filter:invert(100%);
+  }
 }
+
+
