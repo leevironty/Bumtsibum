@@ -1,4 +1,6 @@
 footer{
+  grid-area:footer;
+  align-self:end;
   @extend %center-content-vertical;
   justify-content:space-around;
   a{

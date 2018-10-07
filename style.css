@@ -52,70 +52,120 @@
   content: ":";
   margin-right: 1em; }
 
-#controls #creators {
-  display: flex; }
-  #controls #creators .empty-list {
+#team-creator input, #song-creator input, #team-listing input, #song-listing input {
+  font-size: 13.3333px;
+  border: none;
+  border-bottom: 2px solid #777;
+  color: #777;
+  margin-right: 0.6em; }
+#team-creator input:focus, #song-creator input:focus, #team-listing input:focus, #song-listing input:focus {
+  border-color: #333;
+  color: #333;
+  outline: none; }
+#team-creator .song-inputs, #song-creator .song-inputs, #team-listing .song-inputs, #song-listing .song-inputs {
+  dislplaY: flex; }
+
+#team-creator {
+  grid-area: teamcreator;
+  flex: 1; }
+  #team-creator .team-inputs {
+    display: flex; }
+
+#song-creator {
+  grid-area: songcreator;
+  flex: 2; }
+  #song-creator .song-inputs {
+    display: flex; }
+
+button {
+  outline: none; }
+  button:focus i.material-icons {
+    text-shadow: 0 0 10px #0003; }
+
+#settings {
+  grid-area: settings; }
+
+#inGameControls button {
+  padding: 0.3em 0.7em; }
+  #inGameControls button:focus {
+    outline: auto; }
+  #inGameControls button:hover {
+    background: #555;
+    color: #fff; }
+  #inGameControls button:active {
+    background: #333; }
+  #inGameControls button::first-letter {
+    text-decoration: underline; }
+
+#team-listing, #song-listing {
+  /*padding-top:0.5em;
+  margin-top: 0.5em;*/ }
+  #team-listing .empty-list, #song-listing .empty-list {
     display: none; }
-  #controls #creators .empty-list:last-child {
+  #team-listing .empty-list:last-child, #song-listing .empty-list:last-child {
     display: block; }
-  #controls #creators #song-listing {
-    padding-top: 0.5em;
-    margin-top: 0.5em; }
-    #controls #creators #song-listing .edit-card {
+
+#song-listing {
+  grid-area: songlist; }
+  #song-listing .edit-card {
+    display: flex; }
+    #song-listing .edit-card .counterwraper {
+      position: relative;
+      font-size: 13.333px;
+      width: 22em;
+      margin-right: 0.6em;
       display: flex;
-      align-items: baseline; }
-      #controls #creators #song-listing .edit-card .counterwraper .counter {
-        float: right; }
-  #controls #creators #team-listing {
-    padding-top: 0.5em;
-    margin-top: 0.5em; }
-    #controls #creators #team-listing div.team div.color-indicator {
+      justify-content: space-between;
+      border: none;
+      border-bottom: 2px solid #777;
+      color: #777; }
+      #song-listing .edit-card .counterwraper input {
+        width: 20.5em;
+        border: none;
+        margin: 0; }
+      #song-listing .edit-card .counterwraper:focus-within {
+        border-color: #333;
+        color: #333; }
+      #song-listing .edit-card .counterwraper .counter {
+        position: relative;
+        background: #777;
+        color: white;
+        border-radius: 10px;
+        padding: 0.1em 0.3em 0.2em 0.3em;
+        top: 0.1em;
+        align-self: end; }
+
+#song-lyrics {
+  width: 22em; }
+
+#team-listing {
+  grid-area: teamlist; }
+  #team-listing div.team {
+    display: flex; }
+    #team-listing div.team div.color-indicator {
       padding: 0.5em;
       display: inline-block;
       flex: 1; }
-    #controls #creators #team-listing div.team div.color-indicator.light {
+    #team-listing div.team div.color-indicator.light {
       color: #000; }
-    #controls #creators #team-listing div.team div.color-indicator.dark {
+    #team-listing div.team div.color-indicator.dark {
       color: #fff; }
-    #controls #creators #team-listing div.team p.team-name {
+    #team-listing div.team p.team-name {
       flex: 2;
       margin: 0.5em; }
-  #controls #creators input {
-    border: none;
-    border-bottom: 2px solid #777;
-    color: #777;
-    margin-right: 0.6em; }
-  #controls #creators input:focus {
-    border-color: #333;
-    color: #333;
-    outline: none; }
-  #controls #creators .song-inputs {
-    dislplaY: flex; }
-#controls #team-creator {
-  flex: 1;
-  margin-right: 2em; }
-#controls #song-creator {
-  flex: 2;
-  margin-left: 2em; }
-  #controls #song-creator .song-inputs {
-    display: flex; }
-#controls button {
-  outline: none; }
-  #controls button:focus i.material-icons {
-    text-shadow: 0 0 10px #0003; }
-#controls #inGameControls button {
-  padding: 0.3em 0.7em; }
-  #controls #inGameControls button:focus {
-    outline: auto; }
-  #controls #inGameControls button:hover {
-    background: #555;
-    color: #fff; }
-  #controls #inGameControls button:active {
-    background: #333; }
-  #controls #inGameControls button::first-letter {
-    text-decoration: underline; }
+
+.settings-title, .song-title, .team-title {
+  margin: 0; }
+
+header {
+  grid-area: header; }
+  header h1 {
+    margin-bottom: 0;
+    margin-top: 1em; }
 
 footer {
+  grid-area: footer;
+  align-self: end;
   justify-content: space-around; }
   footer a {
     color: black;
@@ -155,20 +205,8 @@ footer, footer a {
   display: flex;
   align-items: center; }
 
-body {
-  margin: 0;
-  display: flex;
-  flex-flow: column;
-  align-items: center; }
-
-#content {
-  overflow: auto;
-  padding: 0;
-  min-width: 60vw;
-  min-height: 80vh; }
-
 footer {
-  height: 20vh;
+  height: 15vh;
   width: 100vw; }
 
 #hider {
@@ -187,12 +225,23 @@ button {
   border-radius: 2px; }
 
 .icon-button {
+  display: flex;
   border: none;
   vertical-align: -50%;
   padding: 0; }
 
 body {
+  margin: 0;
   font-family: roboto, sans-serif;
-  background: white; }
+  background: white;
+  display: grid;
+  grid-template-columns: 1fr 2fr 4fr 1fr;
+  grid-template-rows: repeat(4, auto) 1fr;
+  grid-template-areas: ". header header ." ". settings settings ." ". teamcreator songcreator ." ". teamlist songlist ." "footer footer footer footer";
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  align-items: start;
+  grid-row-gap: 1.5em; }
 
 /*# sourceMappingURL=style.css.map */

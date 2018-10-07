@@ -12,47 +12,49 @@
     <title>Bumtsibum editor</title>
   </head>
   <body>
-    <div id="content">
-      <header>
-        <h1 class="page-title">Bumtsibum</h1>
-        <div id="help"></div>
-        <div class="keys"></div>
-        <!--TODO: make help and keys-reference-->
-      </header>
-      <div id="controls">
-        <div id="settings">
-          <p class="settings-title">Game settings</p>
 
-        </div>
-        <div id="inGameControls">
-          <button id="game-start">Start game</button>
-          <button id="song-correct">Correct</button>
-          <button id="nextTeam">Wrong / next team</button>
-          <button id="newTry">Nice try / reset timer</button>
-        </div>
-        <div id="creators">
-          <div id="team-creator">
-            <p class="team-title">Teams</p>
-            <input id="team-name" placeholder="Team name" type="text" tabindex="1" autofocus>
-            <button id="add-team" class="icon-button" tabindex="1"><i class="material-icons">add_circle_outline</i></button>
-            <div id="team-listing">
-              <p class="empty-list">No teams added yet</p>
-            </div>
-          </div>
-          <div id="song-creator">
-            <p class="song-title">Songs</p>
-            <div class="song-inputs">
-              <input id="song-name" placeholder="Song name" type="text" tabindex="1">
-              <input id="song-lyrics" size="40" placeholder="Lyrics" type="text" tabindex="1">
-              <button id="add-song" class="icon-button" tabindex="1"><i class="material-icons">add_circle_outline</i></button>
-            </div>
-            <div id="song-listing">
-              <p class="empty-list">No songs added yet</p>
-            </div>
-          </div>
-        </div>
+    <header>
+      <h1 class="page-title">Bumtsibum</h1>
+      <div id="help"></div>
+      <div class="keys"></div>
+      <!--TODO: make help and keys-reference-->
+    </header>
+
+    <div id="settings">
+      <p class="settings-title">Game settings</p>
+      <div id="inGameControls">
+        <button id="game-start">Start game</button>
+        <button id="song-correct">Correct</button>
+        <button id="nextTeam">Wrong / next team</button>
+        <button id="newTry">Nice try / reset timer</button>
       </div>
     </div>
+
+    <div id="team-creator">
+      <p class="team-title">Teams</p>
+      <div class="team-inputs">
+        <input id="team-name" placeholder="Team name" type="text" tabindex="1" autofocus>
+        <button id="add-team" title="Add team" class="icon-button" tabindex="1"><i class="material-icons">add_circle_outline</i></button>
+      </div>
+    </div>
+
+    <div id="team-listing">
+      <p class="empty-list">No teams added yet</p>
+    </div>
+
+    <div id="song-creator">
+      <p class="song-title">Songs</p>
+      <div class="song-inputs">
+        <input id="song-name" placeholder="Song name" type="text" tabindex="1">
+        <input id="song-lyrics" size="40" placeholder="Lyrics" type="text" tabindex="1">
+        <button id="add-song" title="Add song" class="icon-button" tabindex="1"><i class="material-icons">add_circle_outline</i></button>
+      </div>
+    </div>
+
+    <div id="song-listing">
+      <p class="empty-list">No songs added yet</p>
+    </div>
+
     <footer>
         <a href="https://github.com/leevironty/Bumtsibum">
           <img class="logo" src="https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub mark">
@@ -63,7 +65,7 @@
         <a href="https://olarinmaensamoojat.fi">OMS</a>
       </footer>
 
-
+    <!--TODO: fix this-->
     <div id="hider">
       <div id="game-area">
         <h1 id="game-name"></h1>
@@ -103,9 +105,9 @@
         <input type="text" class="edit-song-title" placeholder="Title" tabindex="2">
         <div class="counterwraper">
           <input class="edit-lyrics" type="text" size="40" placeholder="lyrics" tabindex="2">
-          <p  class="counter"><span class="n">0</span> words</p>
+          <p  class="counter n" title="Count of words in lyrics">0</p>
         </div>
-        <button class="remove-song-button icon-button" tabindex="2"><i class="material-icons">remove_circle_outline</i></button>
+        <button class="remove-song-button icon-button" title="Remove song" tabindex="2"><i class="material-icons">remove_circle_outline</i></button>
       </div>
     </template>
     <template id="edit-card-area-template">
@@ -117,7 +119,7 @@
     <div class="team">
       <!--<div class="color-indicator"></div>-->
       <input type="text" class="team-name" tabindex="2">
-      <button class="icon-button remove-team-button" tabindex="2"><i class="material-icons">remove_circle_outline</i></button>
+      <button class="icon-button remove-team-button" title="Remove team" tabindex="2"><i class="material-icons">remove_circle_outline</i></button>
     </div>
   </template>
   <template id="team-score-template">

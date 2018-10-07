@@ -1,94 +1,147 @@
-#controls{
-  #creators{
+#team-creator, #song-creator, #team-listing, #song-listing{
+
+  // Clean inputs
+  input {
+    font-size:13.3333px; // This is default in chrome
+    border: none;
+    border-bottom: 2px solid #777;
+    color: #777;
+    margin-right:0.6em;
+  }
+  input:focus {
+    border-color: #333;
+    color: #333;
+    outline: none;
+  }
+
+  .song-inputs{
+    dislplaY:flex;
+  }
+}
+#team-creator{
+  grid-area: teamcreator;
+  flex:1;
+  .team-inputs{
     display:flex;
-    // show and hide declaration about empty list
-    .empty-list{
-      display:none;
-    }
-    .empty-list:last-child{
-      display:block;
-    }
-    #song-listing{
-      padding-top:0.5em;
-      margin-top: 0.5em;
-      .edit-card{
-        display:flex;
-        align-items: baseline;
-        .counterwraper .counter{
-          float:right;
-        }
+  }
+}
+
+#song-creator{
+  grid-area: songcreator;
+  flex:2;
+  .song-inputs{
+    display:flex;
+  }
+}
+
+
+button{
+  outline:none;
+  &:focus i.material-icons{
+    text-shadow:0 0 10px #0003;
+  }
+}
+
+#settings{
+  grid-area: settings;
+}
+
+#inGameControls button {
+  padding: 0.3em 0.7em;
+  &:focus {
+    outline: auto;
+  }
+  &:hover {
+    background: #555;
+    color: #fff;
+  }
+  &:active {
+    background: #333;
+  }
+  // Underline key for shortcut
+  &::first-letter {
+    text-decoration: underline;
+  }
+}
+
+#team-listing, #song-listing{
+  /*padding-top:0.5em;
+  margin-top: 0.5em;*/
+  .empty-list{
+    display:none;
+  }
+  .empty-list:last-child{
+    display:block;
+  }
+}
+
+#song-listing{
+  grid-area: songlist;
+  .edit-card{
+    display:flex;
+    //align-items: baseline;
+
+
+    .counterwraper{
+      position:relative;
+      font-size:13.333px;
+      width:22em;
+      margin-right:0.6em;
+      display:flex;
+      justify-content:space-between;
+      input{
+        width:20.5em;
+        border:none;
+        margin:0;
       }
-    }
-    #team-listing{
-      padding-top:0.5em;
-      margin-top: 0.5em;
-      div.team{
-        div.color-indicator{
-          padding:0.5em;
-          display:inline-block;
-          flex:1;
-        }
-        div.color-indicator.light{
-          color:#000;
-        }
-        div.color-indicator.dark{
-          color:#fff;
-        }
-        p.team-name{
-          flex:2;
-          margin:0.5em;
-        }
-      }
-    }
-    input {
       border: none;
       border-bottom: 2px solid #777;
       color: #777;
-      margin-right:0.6em;
+      &:focus-within{
+        border-color: #333;
+        color: #333;
+      }
+      .counter{
+        // TODO: add some kind of pill effect
+        position:relative;
+        background:#777;
+        color: white;
+        border-radius:10px;
+        padding: 0.1em 0.3em 0.2em 0.3em;
+        top: 0.1em;
+        align-self: end;
+        //right:0px;
+      }
     }
+  }
+}
 
-    input:focus {
-      border-color: #333;
-      color: #333;
-      outline: none;
+#song-lyrics{
+  width: 22em;
+}
+
+#team-listing{
+  grid-area: teamlist;
+  div.team{
+    display:flex;
+    div.color-indicator{
+      padding:0.5em;
+      display:inline-block;
+      flex:1;
     }
-    .song-inputs{
-      dislplaY:flex;
+    div.color-indicator.light{
+      color:#000;
     }
-  }
-  #team-creator{
-    flex:1;
-    margin-right: 2em;
-  }
-  #song-creator{
-    flex:2;
-    margin-left:2em;
-    .song-inputs{
-      display:flex;
-    }
-  }
-  button{
-    outline:none;
-    &:focus i.material-icons{
-      text-shadow:0 0 10px #0003;
-    }
-  }
-  #inGameControls button{
-    padding:0.3em 0.7em;
-    &:focus{
-      outline:auto;
-    }
-    &:hover{
-      background: #555;
+    div.color-indicator.dark{
       color:#fff;
     }
-    &:active{
-      background: #333;
-    }
-    // Underline key for shortcut
-    &::first-letter{
-      text-decoration: underline;
+    p.team-name{
+      flex:2;
+      margin:0.5em;
     }
   }
+}
 
+.settings-title, .song-title, .team-title{
+  margin:0;
 }

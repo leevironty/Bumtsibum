@@ -5,14 +5,26 @@ class Game{
         this.bindEditorButtons();
         this.bindKeys();
         this.initTooltips();
-        $("input").on("keydown", defocusOnEsc);
+        //$("input").on("keydown", defocusOnEsc); // bad way of implementing this
     }
     handleKeyPresses(event){
-        if (this.noActiveInputs()){
+        if (event.key==="Escape"){
+            // remove focus from everything when exc is pressed
+            // this enables other keyboard shortcuts to work
+            $("*").blur();
+        }
+
+        if (this.noActiveInputs()) {
             // Check if keys 0-9 is pressed and if game is running
-            if (this.cardkeys.includes(event.key) && this.currentTeamId !== undefined){
-                let i = (parseInt(event.key)+9)%10;
+            if (this.cardkeys.includes(event.key) && this.currentTeamId !== undefined) {
+                let i = (parseInt(event.key) + 9) % 10;
                 this.currentSong.revealNthCard(i);
+
+            } else if (event.key==="T") { // hotkey to focus team editor
+                setTimeout(("#team-name").focus(),1);
+            } else if (event.key==="S") { // hotkey to focus song editor
+                setTimeout($("#song-name").focus(),1);
+
             } else { // Handle other hotkeys
                 //for (var i in this.shortcuts){
                 for (var i = 0; i < this.shortcuts.length; i++){
@@ -61,7 +73,8 @@ class Game{
         this.cardkeys = ["1","2","3","4","5","6","7","8","9","0"];
     }
     initTooltips(){
-        for (var i in this.shortcuts){
+        //for (var i in this.shortcuts){
+        for (var i = 0; i < this.shortcuts.length; i++){
             this.shortcuts[i].button.attr("title", "Hotkey: " + this.shortcuts[i].key);
         }
     }
@@ -287,9 +300,9 @@ class Team{
     placeInEditor(){
         this.$team = $($("#team-template").html());
         this.parentGame.setup.$teamListing.append(this.$team);
-        this.$team.children(".team-name").val(this.name);
+        this.$team.find(".team-name").val(this.name);
         // Taking team colours out for now. Maybe not a necessary feature
-     /* var indicator = this.$team.children(".color-indicator");
+     /* var indicator = this.$team.find(".color-indicator");
         indicator.text(this.color);
         indicator.css('background',this.color);
         /* if (isColorDark(this.color)){
@@ -298,8 +311,8 @@ class Team{
             indicator.addClass("light");
         }
         */
-        this.$team.children("input.team-name").on("keyup change",this.updateTeamName.bind(this));
-        this.$team.children(".remove-team-button").on("click",this.removeSelf.bind(this));
+        this.$team.find("input.team-name").on("keyup change",this.updateTeamName.bind(this));
+        this.$team.find(".remove-team-button").on("click",this.removeSelf.bind(this));
 
     }
     removeSelf(){
@@ -308,18 +321,18 @@ class Team{
     }
     updateTeamName(event){
         setTimeout(function(){
-            this.name = this.$team.children("input.team-name").val();
-            this.$score.children(".name").text(this.name);
+            this.name = this.$team.find("input.team-name").val();
+            this.$score.find(".name").text(this.name);
         }.bind(this));
     }
     placeInScoreboard(){
         this.$score = $($("#team-score-template").html());
-        this.$score.children(".name").text(this.name);
-        this.$score.children(".points").text(this.points);
+        this.$score.find(".name").text(this.name);
+        this.$score.find(".points").text(this.points);
         this.parentGame.$gameArea.find("#scoreboard").append(this.$score);
     }
     updateScore(){
-        this.$score.children(".points").text(this.points);
+        this.$score.find(".points").text(this.points);
     }
     startTurn(){
         this.$score.addClass("active");
@@ -408,13 +421,13 @@ class Song{
     updateLyrics(){
         // set timeout 0 is required
         setTimeout(function(){
-            this.lyrics = this.$editSong.children(".edit-lyrics").val();
+            this.lyrics = this.$editSong.find(".edit-lyrics").val();
             this.updateEditorCounter();
         }.bind(this),0);
 
     }
     updateTitle(){
-        this.name = this.$editSong.children(".edit-song-title").val();
+        this.name = this.$editSong.find(".edit-song-title").val();
     }
     revealNthCard(n){
         this.gameCards[n].reveal();
@@ -428,8 +441,8 @@ class GameCard{
         this.$card = $($("#card-template").html());
         this.parentSong = parentSong;
         this.parentSong.parentGame.$songWrapper.append(this.$card);
-        this.$card.children(".number").text(this.n);
-        this.$card.children(".word").text(this.word);
+        this.$card.find(".number").text(this.n);
+        this.$card.find(".word").text(this.word);
         this.$card.click(this.reveal.bind(this));
         this.isTrap = false;
     }
@@ -446,11 +459,12 @@ class GameCard{
     }
 }
 
+/*
 function defocusOnEsc(event){
     if (event.keyCode===27){
         this.blur();
     }
-}
+}*/
 
 function rndColor(){ // this actually won't generate white but that's ok
     var n = Math.floor(Math.random()*0xffffff).toString(16);
